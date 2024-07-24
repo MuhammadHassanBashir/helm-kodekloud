@@ -68,40 +68,40 @@ hum deployment of service files ma kafi cheezo ko user define bna sakhty hn, jis
 
 like:
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.Release.Name}}-nginx
-  labels:
-    app: nginx
-spec:
-  replicas: {{.Values.replicaCount}}
-  selector:
-    matchLabels:
-      app: nginx
-  template:
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
+      name: {{.Release.Name}}-nginx
       labels:
         app: nginx
     spec:
-      containers:
-      - name: nginx
-        image: {{.Values.image}}
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{.Release.Name}}-svc
-spec:
-  selector:
-    app: nginx
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
+      replicas: {{.Values.replicaCount}}
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: {{.Values.image}}
+            ports:
+            - containerPort: 80
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{.Release.Name}}-svc
+    spec:
+      selector:
+        app: nginx
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+      type: LoadBalancer
 
   ab ap deployment or service file ma jaha per b "values" use kry gye uski information ap helm chart install krty time "--set" use krty howy deployment or service file ma dye sakhty hn.. y as user input k toor per use horha hoga..
 
@@ -118,42 +118,42 @@ spec:
 ab sir khty hn k deployment file ma images ko "tag , latest" hn k b zaroor hoti hn or y sab values hum values.yaml file k ma dictionary ko use krty howy kesy dye sakthy hn...
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.Release.Name}}-nginx
-  labels:
-    app: nginx
-spec:
-  replicas: {{.Values.replicaCount}}
-  selector:
-    matchLabels:
-      app: nginx
-  template:
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
+      name: {{.Release.Name}}-nginx
       labels:
         app: nginx
     spec:
-      containers:
-      - name: nginx
-        image: {{.Values.image.repositary}}:{{.values.image.tag}}  --> here values represent getting values from values.yaml file.. image represent values.yaml file image section... and repositary represent values.yaml file image repositary..  and tag represent values.yaml file image tag..
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{.Release.Name}}-svc
-spec:
-  selector:
-    app: nginx
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
-
-
+      replicas: {{.Values.replicaCount}}
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: {{.Values.image.repositary}}:{{.values.image.tag}}  --> here values represent getting values from values.yaml file.. image represent values.yaml file image section... and repositary represent values.yaml file image repositary..  and tag represent values.yaml file image tag..
+            ports:
+            - containerPort: 80
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{.Release.Name}}-svc
+    spec:
+      selector:
+        app: nginx
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+      type: LoadBalancer
+    
+    
 
 values.yaml file..  is sa b hum deployment or service or other kubernetes objects ko values pass kr sakthy hn...
 ------------------
