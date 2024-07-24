@@ -8,11 +8,12 @@ commands:
 ---------
 
 helm create <chart-name>  it will create a skeleton structure of a helm chart. 
-ls <chart-name>
+
+    ls "chart-name"
 
 
--   move all kubernetes deployment or services files in "templete folder" of skeleton structure of a helm chart. once we place files here, our helm chart should be techinically ready to go.. or ready to install helm package.. 
--   if you set static name in your deployment file. then every time when you are installing helm with new release name it will give you the error.. that same name chart is already installed by helm. so "it must have different names each time you install a helm chart." 
+-    Move all kubernetes deployment or services files in "templete folder" of skeleton structure of a helm chart. once we place files here, our helm chart should be techinically ready to go.. or ready to install helm package.. 
+-   If you set static name in your deployment file. then every time when you are installing helm with new release name it will give you the error.. that same name chart is already installed by helm. so "it must have different names each time you install a helm chart." 
 
 so how do we resolve this..
 
