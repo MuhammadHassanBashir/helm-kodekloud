@@ -240,42 +240,42 @@ values.yaml file..
     like:
 
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.Release.Name}}-nginx
-  labels:
-    app: nginx
-spec:
-  replicas: {{.Values.replicaCount}}
-  selector:
-    matchLabels:
-      app: nginx
-  template:
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
+      name: {{.Release.Name}}-nginx
       labels:
         app: nginx
     spec:
-      containers:
-      - name: nginx
-        image: "empty"
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{.Release.Name}}-svc
-spec:
-  selector:
-    app: nginx
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
-
-
+      replicas: {{.Values.replicaCount}}
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: "empty"
+            ports:
+            - containerPort: 80
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{.Release.Name}}-svc
+    spec:
+      selector:
+        app: nginx
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+      type: LoadBalancer
+    
+    
 "so is masly k hal k lye humy kuch is tarha sa krna ha k agr "users user-define info" ni deta tu, values.yaml k through y manual command k through tu "default values ajye" mean fall back default values per hojye... tky pod chal sakhy.
 
 "the logic would be if the user provided something in the values.yaml file then use that if there was not a value provided" and we can do such a thing using "functions"
@@ -362,40 +362,40 @@ like:
 
 ap deployment ma default values k lye asy mention ker sakhty hn...
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.Release.Name}}-nginx
-  labels:
-    app: nginx
-spec:
-  replicas: {{.Values.replicaCount}}
-  selector:
-    matchLabels:
-      app: nginx
-  template:
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
+      name: {{.Release.Name}}-nginx
       labels:
         app: nginx
     spec:
-      containers:
-      - name: nginx
-        image: {{ default "nginx" .Values.image.repositary}}   --> mean agr user values.yaml file  ma values ni dye ga tu values deployment ko ni mily gi user ki so wo default set values use ker sakhta ha..
-        ports:
-        - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{.Release.Name}}-svc
-spec:
-  selector:
-    app: nginx
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
+      replicas: {{.Values.replicaCount}}
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: {{ default "nginx" .Values.image.repositary}}   --> mean agr user values.yaml file  ma values ni dye ga tu values deployment ko ni mily gi user ki so wo default set values use ker sakhta ha..
+            ports:
+            - containerPort: 80
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{.Release.Name}}-svc
+    spec:
+      selector:
+        app: nginx
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+      type: LoadBalancer
 
 Pipelines
 -----------
@@ -441,36 +441,36 @@ orgLabel: payroll
 deploymentfile
 --------------
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.Release.Name}}-nginx
-  {{ if.Values.orgLabel }}    --------------> here we apply conditional statement. k agr value.yaml file "orgLabel" exist krta ha. then next label values.yaml as label ki value get kry ga...
-  labels:
-    org: {{ .Value.orgLabel }}
-  {{ end }}  
-spec:
-  replicas: {{.Values.replicaCount}}
-  selector:
-    matchLabels:
-      app: nginx
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: {{.Release.Name}}-nginx
+      {{ if.Values.orgLabel }}    --------------> here we apply conditional statement. k agr value.yaml file "orgLabel" exist krta ha. then next label values.yaml as label ki value get kry ga...
+      labels:
+        org: {{ .Value.orgLabel }}
+      {{ end }}  
+    spec:
+      replicas: {{.Values.replicaCount}}
+      selector:
+        matchLabels:
+          app: nginx
 
 final file y bnye gi..
 -----------------------
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.Release.Name}}-nginx
-  
-  labels:
-    org: payroll   ==> values.yaml sa information ai ha..
-  
-spec:
-  replicas: {{.Values.replicaCount}}
-  selector:
-    matchLabels:
-      app: nginx
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: {{.Release.Name}}-nginx
+      
+      labels:
+        org: payroll   ==> values.yaml sa information ai ha..
+      
+    spec:
+      replicas: {{.Values.replicaCount}}
+      selector:
+        matchLabels:
+          app: nginx
 
 
 lets take more details in conditional statement.
@@ -482,34 +482,34 @@ ab sir khty hn final file ma condition statements ki jaga empty space ajye gi..
 like:
 ----
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.Release.Name}}-nginx
-  {{- if.Values.orgLabel }}    --------------> here we apply conditional statement. k agr value.yaml file "orgLabel" exist krta ha. then next label values.yaml as label ki value get kry ga...
-  labels:
-    org: {{ .Value.orgLabel }}
-  {{- end }}  
-spec:
-  replicas: {{.Values.replicaCount}}
-  selector:
-    matchLabels:
-      app: nginx
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: {{.Release.Name}}-nginx
+      {{- if.Values.orgLabel }}    --------------> here we apply conditional statement. k agr value.yaml file "orgLabel" exist krta ha. then next label values.yaml as label ki value get kry ga...
+      labels:
+        org: {{ .Value.orgLabel }}
+      {{- end }}  
+    spec:
+      replicas: {{.Values.replicaCount}}
+      selector:
+        matchLabels:
+          app: nginx
 
 result:
 ------  you will get the result like this. extra spaces will trimmed it out...
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.Release.Name}}-nginx 
-  labels:
-    org: payroll   ==> values.yaml sa information ai ha..  
-spec:
-  replicas: {{.Values.replicaCount}}
-  selector:
-    matchLabels:
-      app: nginx
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: {{.Release.Name}}-nginx 
+      labels:
+        org: payroll   ==> values.yaml sa information ai ha..  
+    spec:
+      replicas: {{.Values.replicaCount}}
+      selector:
+        matchLabels:
+          app: nginx
 
 
 - ab sir khty hn k jis trha sa programming language ma, "if, else if , else" hota ha isi tarha helm ma b hota ha..
@@ -517,22 +517,22 @@ spec:
 like:
 -----
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.Release.Name}}-nginx
-  {{- if.Values.orgLabel }}    --------------> here we apply conditional statement. k agr value.yaml file "orgLabel" exist krta ha. then next label values.yaml as label ki value get kry ga...
-  labels:
-    org: {{ .Value.orgLabel }}
-  {{- else if eq .Values.orgLabel "hr"}}
-  labels:
-    org: human resources
-  {{- end }}  
-spec:
-  replicas: {{.Values.replicaCount}}
-  selector:
-    matchLabels:
-      app: nginx
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: {{.Release.Name}}-nginx
+      {{- if.Values.orgLabel }}    --------------> here we apply conditional statement. k agr value.yaml file "orgLabel" exist krta ha. then next label values.yaml as label ki value get kry ga...
+      labels:
+        org: {{ .Value.orgLabel }}
+      {{- else if eq .Values.orgLabel "hr"}}
+      labels:
+        org: human resources
+      {{- end }}  
+    spec:
+      replicas: {{.Values.replicaCount}}
+      selector:
+        matchLabels:
+          app: nginx
 
 there are many other functions like this...
 
@@ -557,12 +557,12 @@ serviceAccount:
 
 serviceaccount file:
 --------------------
-{{- if .Values.serviceAccount.create}}
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ .Release.Name}}-rebot-sa
- {{- else}} 
+    {{- if .Values.serviceAccount.create}}
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      name: {{ .Release.Name}}-rebot-sa
+     {{- else}} 
 
 
 with Blocks
@@ -579,26 +579,26 @@ values.yaml:
 
 values.yaml ma information dictionary form ma ha..
 
-app:
-  ui:
-    bg: red
-    fg: black
-  db:
-    name: "users"
-    conn: "mongodb://localhost:27020/mydb"
+    app:
+      ui:
+        bg: red
+        fg: black
+      db:
+        name: "users"
+        conn: "mongodb://localhost:27020/mydb"
 
 configmap:
 ---------
 
-apiVersion: v1
-kind:   configmap
-metadata:
-  name: {{ .Release.Name}}-appinfo
-data:
-  backgroup: {{ .Values.app.ui,bg}}
-  foreground: {{.Values.app.ui.fg}}
-  database: {{ .Values.app.db.name}}
-  connection:   {{ .Values.app.db.conn}}  all will be getting the values from values.yaml file..
+    apiVersion: v1
+    kind:   configmap
+    metadata:
+      name: {{ .Release.Name}}-appinfo
+    data:
+      backgroup: {{ .Values.app.ui,bg}}
+      foreground: {{.Values.app.ui.fg}}
+      database: {{ .Values.app.db.name}}
+      connection:   {{ .Values.app.db.conn}}  all will be getting the values from values.yaml file..
 
 "so the dot as we discuss earliar is a reference to the current scope,  so everything falls under the root scope..
 
@@ -619,21 +619,21 @@ that is why to access any of these objects, you must traverse all the way from t
 like:
 ----
 
-apiVersion: v1
-kind:   configmap
-metadata:
-  name: {{ .Release.Name}}-appinfo
-data:
-  {{- with .Value.app}}         --------> current scope
-    {{- with .ui}}
-    backgroup: {{ .bg}}
-    foreground: {{.fg}}
-    {{- end}}
-    {{- with .db}}
-    database: {{ .name}}
-    connection:   {{ .conn}}  all will be getting the values from values.yaml file..
-    {{- end}}
-  {{- end}}
+    apiVersion: v1
+    kind:   configmap
+    metadata:
+      name: {{ .Release.Name}}-appinfo
+    data:
+      {{- with .Value.app}}         --------> current scope
+        {{- with .ui}}
+        backgroup: {{ .bg}}
+        foreground: {{.fg}}
+        {{- end}}
+        {{- with .db}}
+        database: {{ .name}}
+        connection:   {{ .conn}}  all will be getting the values from values.yaml file..
+        {{- end}}
+      {{- end}}
 
 
   ab sir na bty ha k upper hum na dekha k root scope k under "release" or "values" arhy thy.. ab ap aik scope ma rakhty howy dosary scope ki values ko simply call kery gy tu error dye ga.. because by default her koi apny scope tk bound ha..
@@ -643,22 +643,22 @@ data:
 like this..
 ----------
 
-apiVersion: v1
-kind:   configmap
-metadata:
-  name: {{ .Release.Name}}-appinfo
-data:
-  {{- with .Value.app}}         --------> current scope
-    {{- with .ui}}
-    backgroup: {{ .bg}}
-    foreground: {{.fg}}
-    {{- end}}
-    {{- with .db}}
-    database: {{ .name}}
-    connection:   {{ .conn}}  all will be getting the values from values.yaml file..
-    {{- end}}
-  release: {{. Release.Name}}   ---> it will give you error. becasue values.app k scope k under ha hi ni.. 
-  {{- end}}
+    apiVersion: v1
+    kind:   configmap
+    metadata:
+      name: {{ .Release.Name}}-appinfo
+    data:
+      {{- with .Value.app}}         --------> current scope
+        {{- with .ui}}
+        backgroup: {{ .bg}}
+        foreground: {{.fg}}
+        {{- end}}
+        {{- with .db}}
+        database: {{ .name}}
+        connection:   {{ .conn}}  all will be getting the values from values.yaml file..
+        {{- end}}
+      release: {{. Release.Name}}   ---> it will give you error. becasue values.app k scope k under ha hi ni.. 
+      {{- end}}
 
   it will give you error. becasue values.app k scope k under ha hi ni.. 
   
@@ -667,22 +667,22 @@ data:
 
 so ap y kam asy ker sakhty hn...   "calling other scope value in a scope"
 --------------------------------
-apiVersion: v1
-kind:   configmap
-metadata:
-  name: {{ .Release.Name}}-appinfo
-data:
-  {{- with .Value.app}}         --------> current scope
-    {{- with .ui}}
-    backgroup: {{ .bg}}
-    foreground: {{.fg}}
-    {{- end}}
-    {{- with .db}}
-    database: {{ .name}}
-    connection:   {{ .conn}}  all will be getting the values from values.yaml file..
-    {{- end}}
-  release: {{ $.Release.Name}}   --> is tarha sa ap other scope ki value ko is scope ma get kr sakhty hn..
-  {{- end}}
+    apiVersion: v1
+    kind:   configmap
+    metadata:
+      name: {{ .Release.Name}}-appinfo
+    data:
+      {{- with .Value.app}}         --------> current scope
+        {{- with .ui}}
+        backgroup: {{ .bg}}
+        foreground: {{.fg}}
+        {{- end}}
+        {{- with .db}}
+        database: {{ .name}}
+        connection:   {{ .conn}}  all will be getting the values from values.yaml file..
+        {{- end}}
+      release: {{ $.Release.Name}}   --> is tarha sa ap other scope ki value ko is scope ma get kr sakhty hn..
+      {{- end}}
 
 Loops and ranges
 ----------------
@@ -711,15 +711,15 @@ regions:
 configmap
 ---------
 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{.Release.Name}}-regioninfo
-data:
-  regions:
-  {{- range .Value.regions}}   ---> ab y value.yaml file ma region section sa region ko one by one ker k pick kry ga or configmap ma dye ga...
-  - {{ . | quote}}              ----> . yha per iteration k lye use horha ha. or jesy hi koi value aye gi pipe usko as input lye ga or then "quote" function k through is per quotation lga dye ga.. and so on and soo farr.
-  {{- end}}
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: {{.Release.Name}}-regioninfo
+    data:
+      regions:
+      {{- range .Value.regions}}   ---> ab y value.yaml file ma region section sa region ko one by one ker k pick kry ga or configmap ma dye ga...
+      - {{ . | quote}}              ----> . yha per iteration k lye use horha ha. or jesy hi koi value aye gi pipe usko as input lye ga or then "quote" function k through is per quotation lga dye ga.. and so on and soo farr.
+      {{- end}}
 
 
 Named template
@@ -738,10 +738,10 @@ like
 _helpers.tpl
 ------------
 
-{{- define "labels" }}
-  app.kubernetes.io/name: nginx
-  app.kubernetes.io/instance: nginx
-{{- end}}
+    {{- define "labels" }}
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/instance: nginx
+    {{- end}}
 
 so you can call this lines any where in the template..
 
@@ -749,48 +749,48 @@ like...
 -------
 
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{.Release.Name}}-svc
-  labels:
-    {{- template "labels"}}  ---> it will lines from "_helpers.tpl"
-spec:
-  selector:
-    app: nginx
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{.Release.Name}}-svc
+      labels:
+        {{- template "labels"}}  ---> it will lines from "_helpers.tpl"
+    spec:
+      selector:
+        app: nginx
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+      type: LoadBalancer
 
 final file would be
 -------------------
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{.Release.Name}}-svc
-  labels:
-      app.kubernetes.io/name: nginx
-      app.kubernetes.io/instance: nginx
-spec:
-  selector:
-    app: nginx
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{.Release.Name}}-svc
+      labels:
+          app.kubernetes.io/name: nginx
+          app.kubernetes.io/instance: nginx
+    spec:
+      selector:
+        app: nginx
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+      type: LoadBalancer
 
 
 _helpers.tpl
 ------------
 
-{{- define "labels" }}
-  app.kubernetes.io/name: nginx
-  app.kubernetes.io/instance: nginx
-{{- end}}
+    {{- define "labels" }}
+      app.kubernetes.io/name: nginx
+      app.kubernetes.io/instance: nginx
+    {{- end}}
 
 ab ap hard corded value ko user define b bna sakhty hn..
 
@@ -799,29 +799,29 @@ like this
 _helpers.tpl
 ------------
 
-{{- define "labels" }}
-  app.kubernetes.io/name: {{ .Release.Name }}
-  app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end}}
+    {{- define "labels" }}
+      app.kubernetes.io/name: {{ .Release.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- end}}
 
 and to transfer the current scope to the template file... add a dot at the end of the template statement..
 
 like :
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{.Release.Name}}-svc
-  labels:
-    {{- template "labels" . }}  ---> it will lines from "_helpers.tpl"
-spec:
-  selector:
-    app: nginx
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{.Release.Name}}-svc
+      labels:
+        {{- template "labels" . }}  ---> it will lines from "_helpers.tpl"
+    spec:
+      selector:
+        app: nginx
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+      type: LoadBalancer
 
 
 
@@ -832,55 +832,55 @@ as krny sa apki files ni chaly gi.. so how we can resolve this issue.. we can fi
 like 
 -----
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.Release.Name}}-nginx
-  labels:
-    {{- template "labels" . }}
-spec:
-  replicas: {{.Values.replicaCount}}
-  selector:
-    matchLabels:
-    {{- template "labels" . | indent 2}} ---> it will indent line of 2 space
-  template:
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
+      name: {{.Release.Name}}-nginx
       labels:
-      {{- template "labels" . | indent 4 }}---> it will indent line of 4 space
+        {{- template "labels" . }}
     spec:
-      containers:
-      - name: nginx
-        image: {{ default "nginx" .Values.image.repositary}}   --> mean agr user values.yaml file  ma values ni dye ga tu values deployment ko ni mily gi user ki so wo default set values use ker sakhta ha..
-        ports:
-        - containerPort: 80
-
+      replicas: {{.Values.replicaCount}}
+      selector:
+        matchLabels:
+        {{- template "labels" . | indent 2}} ---> it will indent line of 2 space
+      template:
+        metadata:
+          labels:
+          {{- template "labels" . | indent 4 }}---> it will indent line of 4 space
+        spec:
+          containers:
+          - name: nginx
+            image: {{ default "nginx" .Values.image.repositary}}   --> mean agr user values.yaml file  ma values ni dye ga tu values deployment ko ni mily gi user ki so wo default set values use ker sakhta ha..
+            ports:
+            - containerPort: 80
+    
 "ab sir khty hn k y kam ni kry ga because template "function" ni ha "action" ha. so you need to use "include" instead of "template". because template is action and include is a function..
 
 
 like 
 -----
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{.Release.Name}}-nginx
-  labels:
-    {{- template "labels" . }}
-spec:
-  replicas: {{.Values.replicaCount}}
-  selector:
-    matchLabels:
-    {{- include "labels" . | indent 2}} ---> it will indent line of 2 space
-  template:
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
+      name: {{.Release.Name}}-nginx
       labels:
-      {{- include "labels" . | indent 4 }}---> it will indent line of 4 space
+        {{- template "labels" . }}
     spec:
-      containers:
-      - name: nginx
-        image: {{ default "nginx" .Values.image.repositary}}   --> mean agr user values.yaml file  ma values ni dye ga tu values deployment ko ni mily gi user ki so wo default set values use ker sakhta ha..
-        ports:
-        - containerPort: 80
+      replicas: {{.Values.replicaCount}}
+      selector:
+        matchLabels:
+        {{- include "labels" . | indent 2}} ---> it will indent line of 2 space
+      template:
+        metadata:
+          labels:
+          {{- include "labels" . | indent 4 }}---> it will indent line of 4 space
+        spec:
+          containers:
+          - name: nginx
+            image: {{ default "nginx" .Values.image.repositary}}   --> mean agr user values.yaml file  ma values ni dye ga tu values deployment ko ni mily gi user ki so wo default set values use ker sakhta ha..
+            ports:
+            - containerPort: 80
 
 Chart Hooks
 ------------
@@ -906,9 +906,9 @@ so after the upgrade hum chahty hn k some kind of cleanup activity ho or kisi ko
 like:
 ----
 
-helm upgrade ---> verify --> render --> pre-install hook --->upgrade --> post install hook.. 
-helm upgrade ---> verify --> render --> pre delete hook --->upgrade --> post delete hook.. 
-helm upgrade ---> verify --> render --> pre roleback hook --->upgrade --> post rollback hook.. 
+    helm upgrade ---> verify --> render --> pre-install hook --->upgrade --> post install hook.. 
+    helm upgrade ---> verify --> render --> pre delete hook --->upgrade --> post delete hook.. 
+    helm upgrade ---> verify --> render --> pre roleback hook --->upgrade --> post rollback hook.. 
 
 let see how to configure hooks:
 --------------------------------
@@ -924,22 +924,22 @@ is solution k lye hum pre-upgrade hook ki file ma(mean job file) ma "annotation"
 like:
 ----
 
-apiVersion: batch/v1
-kind: job
-metadata:
-  name: {{ .Release.Name}}-nginx
-  annotations:
-    "helm.sh/hook": pre-upgrade    --> this annotation will define k y pre upgrade hook ma job use horhi hogi..
-spec:
-  template:
+    apiVersion: batch/v1
+    kind: job
     metadata:
-      name: {{. Release.Name}}-nginx
+      name: {{ .Release.Name}}-nginx
+      annotations:
+        "helm.sh/hook": pre-upgrade    --> this annotation will define k y pre upgrade hook ma job use horhi hogi..
     spec:
-      restartPolicy: Never
-      containers:
-      - name: pre-upgrade-backup-job
-        image: "alpine"
-        command: ["/bin/backup.sh"]
+      template:
+        metadata:
+          name: {{. Release.Name}}-nginx
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: pre-upgrade-backup-job
+            image: "alpine"
+            command: ["/bin/backup.sh"]
 
 
 ab ap na multiple job ko exist kr rhy hn same preupgrade hook ma or ap is cheez ko kesy make sure kry gye k kon si job phily execute ho. y kam ap "weight" k through ker sakhty hn.. apko jobs ki manifest file ma annotation k sath weight b btana ha.. is sa y hoga ka helm jo pta chal jye ga k kis job ko phily run krna ha.. 
@@ -948,31 +948,31 @@ ab ap na multiple job ko exist kr rhy hn same preupgrade hook ma or ap is cheez 
 like:
 -----
 
-apiVersion: batch/v1
-kind: job
-metadata:
-  name: {{ .Release.Name}}-nginx
-  annotations:
-    "helm.sh/hook": pre-upgrade    --> this annotation will define k y pre upgrade hook ma job use horhi hogi..
-     "helm.sh/hook-weight": "5"       mean helm is job ko 5th no per run kry ga..   
-spec:
-  template:
+    apiVersion: batch/v1
+    kind: job
     metadata:
-      name: {{. Release.Name}}-nginx
+      name: {{ .Release.Name}}-nginx
+      annotations:
+        "helm.sh/hook": pre-upgrade    --> this annotation will define k y pre upgrade hook ma job use horhi hogi..
+         "helm.sh/hook-weight": "5"       mean helm is job ko 5th no per run kry ga..   
     spec:
-      restartPolicy: Never
-      containers:
-      - name: pre-upgrade-backup-job
-        image: "alpine"
-        command: ["/bin/backup.sh"]
+      template:
+        metadata:
+          name: {{. Release.Name}}-nginx
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: pre-upgrade-backup-job
+            image: "alpine"
+            command: ["/bin/backup.sh"]
 
 
 more usefull hooks:
 ------------------
 
-"helm.sh/hook-delete-policy": hook-succeeded
-"hook-failed"
-"before-hook-creation"
+    "helm.sh/hook-delete-policy": hook-succeeded
+    "hook-failed"
+    "before-hook-creation"
 
 packaging and uploading charts
 ------------------------------
@@ -1001,16 +1001,16 @@ first need a private key:
 
 -------------------------
 
-gpg --quick-generate-key "john smith"
+    gpg --quick-generate-key "john smith"
 
 this could uploaded to an open PGP key server like "keyserver.ubunutu.com"
 
 - command ko make more key..
 ============================
 
-gpg --full generate-key "john smith"
-
-gpg --export-secret-keys >1/.gnupg/secring.gpg
+    gpg --full generate-key "john smith"
+    
+    gpg --export-secret-keys >1/.gnupg/secring.gpg
 
 now we have key ready and package it with using helm package command but with the sign option
 
@@ -1026,8 +1026,8 @@ you should copy both the tgz chart archive and also the tgz.proc .provenance fil
 
 jb user k ps y files ko gi tu wo "helm verify <chart-name>" sa iski verification kr sakhty hn..
 
-"helm verify --keyring ./mypublickey <chartname>"
-"gpg --recv-key --keyserver keyserver.ubuntu.com <>"
+    "helm verify --keyring ./mypublickey <chartname>"
+    "gpg --recv-key --keyserver keyserver.ubuntu.com <>"
 
 uploading chart
 ----------------
@@ -1048,13 +1048,13 @@ let say we have package the file with helm package command..
 
 so list directory and move .tgz file in directory..
 
-ls
-mkdir nginx-chart-files
-cp nginx-chart-0.1.0.tgz nginx-chart-0.1.0.tgz.provn  nginx-chart-files
+    ls
+    mkdir nginx-chart-files
+    cp nginx-chart-0.1.0.tgz nginx-chart-0.1.0.tgz.provn  nginx-chart-files
 
 now,
 
-helm repo index nginx-chart-files/ --url https://example.com/charts
+    helm repo index nginx-chart-files/ --url https://example.com/charts
 
 we know see the index.yaml file..
 
@@ -1066,6 +1066,6 @@ once chart upload. all that you need to share the url to those who download the 
 
 like:
 
-helm repo add ..
-helm repo list
-helm install <release name> <chart name>
+    helm repo add ..
+    helm repo list
+    helm install <release name> <chart name>
